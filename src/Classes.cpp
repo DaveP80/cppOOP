@@ -1,63 +1,62 @@
 #include <iostream>
+#include <vector>
 #include <thread>
-using namespace std;
- 
-// A dummy function
-void foo(int Z)
-{
-  for (int i = 0; i < Z; i++)
-  {
-    cout << "Thread using function"
-            " pointer as callable\n";
-  }
-}
- 
-// A callable object
-class thread_obj {
-public:
-    void operator()(int x)
-    {
-      for (int i = 0; i < x; i++)
-        cout << "Thread using function"
-                " object as callable\n";
+#include <mutex>
+#include <random>
+
+std::mutex vector_mutex;
+
+// Adds a random number of integers (between 15 and 30) to the vector
+void add_integers(std::vector<int>& v) {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(15, 30);
+    std::uniform_int_distribution<> dis2(1, 100);
+
+    while (v.size() < 125) {
+        int num_integers_to_add = dis(gen);
+        std::cout << "adding " << num_integers_to_add << "\n";
+        std::vector<int> ints_to_add(num_integers_to_add);
+        for (int i = 0; i < num_integers_to_add; ++i) {
+            ints_to_add[i] = dis2(gen);
+        }
+        {
+            std::lock_guard<std::mutex> lock(vector_mutex);
+            v.insert(v.end(), ints_to_add.begin(), ints_to_add.end());
+        }
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
-};
- 
-// Driver code
-int main()
-{
-  cout << "Threads 1 and 2 and 3 "
-          "operating independently" << endl;
-   
-  // This thread is launched by using
-  // function pointer as callable
-  thread th1(foo, 3);
- 
-  // This thread is launched by using
-  // function object as callable
-  thread th2(thread_obj(), 3);
-   
-  // Define a Lambda Expression
-  auto f = [](int x)
-  {
-    for (int i = 0; i < x; i++)
-      cout << "Thread using lambda"
-              " expression as callable\n";
-  };
-   
-  // This thread is launched by using
-  // lambda expression as callable
-  thread th3(f, 3);
-   
-  // Wait for the threads to finish
-  // Wait for thread t1 to finish
-  th1.join();
-   
-  // Wait for thread t2 to finish
-  th2.join();
-   
-  // Wait for thread t3 to finish
-  th3.join();
-   
-  return 0;
+}
+
+// Removes a random number of integers (between 4 and 9) from the vector
+void remove_integers(std::vector<int>& v) {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(4, 9);
+
+    while (v.size() < 125) {
+        int num_integers_to_remove = dis(gen);
+        {   
+            std::cout << "removing " << num_integers_to_remove << "\n";
+            std::lock_guard<std::mutex> lock(vector_mutex);
+            if (v.size() >= num_integers_to_remove) {
+                v.erase(v.begin(), v.begin() + num_integers_to_remove);
+            }
+        }
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    }
+}
+
+int main() {
+    std::vector<int> v;
+    std::thread add_thread(add_integers, std::ref(v));
+    std::thread remove_thread(remove_integers, std::ref(v));
+    add_thread.join();
+    remove_thread.join();
+    std::cout << "Final size of the vector: " << v.size() << std::endl;
+    std::cout << "\n";
+    for (int i : v) {
+        std::cout << i << " ";
+    }
+    return 0;
 }
