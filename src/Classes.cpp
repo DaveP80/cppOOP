@@ -24,7 +24,7 @@ int main() {
 
     while (v.size() <= 125) {
         num_to_add = add_dist(gen);
-        std::cout << "removing " << num_to_remove << "\n";
+        std::cout << "adding " << num_to_add << "\n";
         for (int i = 0; i < num_to_add; ++i) {
             v.push_back(i);
         }
