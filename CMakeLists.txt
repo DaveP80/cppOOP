@@ -4,6 +4,8 @@ project(CMakeTutorial
     DESCRIPTION "A CMake Tutorial"
     LANGUAGES CXX)
 
-file(GLOB MAIN "src/*")
+set(CMAKE_CXX_FLAGS -pthread)
 
+file(GLOB MAIN "src/*")
+find_package(Threads REQUIRED)
 add_executable(executable ${MAIN})
