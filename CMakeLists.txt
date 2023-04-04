@@ -4,6 +4,6 @@ project(CMakeTutorial
     DESCRIPTION "A CMake Tutorial"
     LANGUAGES CXX)
 
-file(GLOB MAIN "src/*")
+file(GLOB MAIN "lesson/*")
 
 add_executable(executable ${MAIN})
