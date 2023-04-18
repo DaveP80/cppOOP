@@ -4,6 +4,6 @@ project(CMakeTutorial
     DESCRIPTION "A CMake Tutorial"
     LANGUAGES CXX)
 
-file(GLOB MAIN "lesson/*")
+file(GLOB MAIN "fibonacci/*")
 
 add_executable(executable ${MAIN})
