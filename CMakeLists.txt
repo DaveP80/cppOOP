@@ -4,6 +4,6 @@ project(CMakeTutorial
     DESCRIPTION "A CMake Tutorial"
     LANGUAGES CXX)
 
-file(GLOB MAIN "fibonacci/*")
+file(GLOB MAIN "leet/lettercombination.cpp")
 
 add_executable(executable ${MAIN})
