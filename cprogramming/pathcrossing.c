@@ -7,7 +7,7 @@ bool isPathCrossing(char* path) {
     stor[0][1] = 0;
     int idx = 1;
 
-    int length = sizeof(stor) / sizeof(stor[0]);  // Calculate the length outside the loop
+    int length = sizeof(stor) / sizeof(stor[0]);
 
     for (int i = 0; i < strlen(path); i++) {
         int temp[2];
@@ -29,7 +29,6 @@ bool isPathCrossing(char* path) {
             temp[1] = stor[idx-1][1];
         }
 
-        // Check for intersections with all previous positions
         for (int z = 0; z < idx; z++) {
             if (temp[0] == stor[z][0] && temp[1] == stor[z][1]) {
                 return true;
