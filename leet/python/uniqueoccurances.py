@@ -12,4 +12,5 @@ class Solution(object):
                     return False
                 stor[temp] = m
                 c.append(m)
+                l = []
         return True
