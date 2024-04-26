@@ -8,7 +8,7 @@ var pathSum = function(root, targetSum) {
   
     function backtrack(root, sum, temp) {
       if (root === null) return;
-      if (!root ?.left && !root ?.right && sum === root.val) {
+      if (!root?.left && !root?.right && sum === root.val) {
         return res.push([...temp, root.val]);
       }
       temp.push(root.val);
